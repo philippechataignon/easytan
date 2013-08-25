@@ -7,6 +7,7 @@
     <meta name="description" content="Horaires Tan Nantes">
     <meta name="keywords" content="horaire, horaires, nantes, bus, busway,tramway, tan">
     <meta name="author" content="Corentin Chataignon">
+    <meta name="author" content="Philippe Chataignon">
     <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <style>
@@ -23,9 +24,6 @@
             <ul class="nav">
                 <li><a href="/">Accueil</a></li>
                 <li><a href="/savoir">En savoir plus</a></li>
-            </ul>
-            <ul class="nav pull-right">
-                <li><a href="#">Mon EasySpace</a></li>
             </ul>
         </div>
     </div>
