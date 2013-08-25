@@ -14,10 +14,6 @@ class Schedule:
         return self.session.query(Route)
 
     @property
-    def agencies(self):
-        return self.session.query(Agency)
-
-    @property
     def service_periods(self):
         return self.session.query(ServicePeriod)
 
@@ -128,32 +124,3 @@ class Schedule:
             trips = trips.filter_by(direction_id=direction_id)
         trips = trips.order_by(StopTime.arrival_time)
         return trips
-
-    def create_tables(self):
-        Base.metadata.create_all()
-
-    def drop_tables(self):
-        Base.metadata.drop_all()
-
-    def commit(self) :
-        self.session.commit()
-
-if __name__ == '__main__' :
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import scoped_session, sessionmaker
-
-    engine = create_engine('sqlite:///tan/tan.db', echo=False)
-    engine.execute("PRAGMA synchronous=OFF")
-    Base.metadata.bind = engine
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    sched = Schedule(session)
-    #print sched.horaire('LMBR1').all()
-    #print sched.liste_stops('LBR')
-    #print sched.stop_form('COME3').all()
-    #s = sched.getstop('COME3')
-    ret = sched.stop_form('COMM')
-    #libs = ["%s : %s vers %s" % (x.stop_id, x.route.route_long_name, x.terminus.stop_name) for x in stops]
-    #print "\n".join(libs)
-    print ret
