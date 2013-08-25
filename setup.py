@@ -38,7 +38,5 @@ setup(name='easytan',
       entry_points="""\
       [paste.app_factory]
       main = easytan:main
-      [console_scripts]
-      initialize_easytan_db = easytan.scripts.initializedb:main
       """,
       )

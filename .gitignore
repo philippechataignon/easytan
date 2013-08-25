@@ -1,0 +1,12 @@
+*.db
+*.swp
+*.pyc
+*.db
+*.7z
+*.csv
+*.txt
+build/
+dist/
+data/
+*.egg-info/
+__compile__/
