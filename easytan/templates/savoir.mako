@@ -34,9 +34,14 @@
             <h2>Astuce easytan</h2>
             <p>Une fois que l'on a repéré le code de l'arrêt, on peut mettre directement le lien
             dans les favoris.</p>
-            <p>Exemple : la station <i>Ruette</i> a deux arrêts : RUET1 et RUET2. Pour obtenir directement
-            les horaires du jour à cet arret, on peut mettre l'adresse suivante en favori :<br />
-            <code><a href="http://easytan.fr/stop/RUET2">http://easytan.fr/stop/RUET2</a>
+            <p>Exemple : la station <i>Bd de Doulon</i> a pour code BDOU. Pour obtenir directement
+            la page d'accueil pour cet arrêt, on peut mettre l'adresse suivante en favori :<br />
+            <code><a href="http://easytan.fr/stop/BDOU">http://easytan.fr/stop/BDOU</a>
+            </code>
+            </p>
+            <p>Pour accéder directement à la page permettant de selectionner les horaires, 
+            on peut mettre l'adresse suivante en favori :<br />
+            <code><a href="http://easytan.fr/form/BDOU">http://easytan.fr/form/BDOU</a>
             </code>
             </p>
         </div>
@@ -59,5 +64,19 @@
             <a href="mailto:webmaster@easytan.fr">webmaster@easytan.fr</a>
             </p>
         </div>
+    </div>
+    <div class="row">
+        <div class="span8">
+        <h2>Participer au développement du site easytan.fr</h2>
+        Le code source de ce site est accessible depuis <a href="http://github.com/philippechataignon/easytan">GitHub</a>.
+        </div>
+    </div>
+    <div class="row">
+        <div class="span8">
+            &nbsp;
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2013 easytan.fr</p>
     </div>
 </div>
