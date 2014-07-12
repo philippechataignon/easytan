@@ -77,6 +77,6 @@
         </div>
     </div>
     <div class="footer">
-        <p>&copy; 2013 easytan.fr</p>
+        <p>&copy; 2013, 2014 easytan.fr</p>
     </div>
 </div>
