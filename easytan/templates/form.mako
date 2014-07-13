@@ -15,8 +15,7 @@
                 '/json_hor', 
                 {
                     'stop_id': $('#stop_id option:selected').val(),
-                    'route_id':$('#route_id option:selected').val(),
-                    'direction_id':$('#direction_id option:selected').val(),
+                    'routedir_id':$('#routedir_id option:selected').val(),
                     'date': $('#date').val(),
                 }, 
                 function(data) {
@@ -66,17 +65,14 @@ stop_id = "%s - %s (%s)" % (stop.stop_id, stop.stop_name, stop.commune.nom) if s
         % endfor
         </select>
         Ligne:
-        <select class="span2" name="route_id" id="route_id">
+        <select class="span4" name="routedir_id" id="routedir_id">
             <option value="ALL" selected="selected">Toutes les lignes</option>
-        % for r in routes:
-            <option value="${r.route_id}">${r.route_long_name}</option>
+        % for r, d, n in routes:
+        <%
+        routedir_id = "%s|%s" % (r.route_id, d)
+        %>
+        <option value="${routedir_id}">Ligne ${r.route_short_name} - Direction ${n}</option>
         % endfor
-        </select>
-        Sens:
-        <select class="span1" name="direction_id" id="direction_id">
-            <option value="ALL" selected="selected">&larr;&nbsp;&rarr;</option>
-            <option value="0">&rarr;</option>
-            <option value="1">&larr;<img width="10" height="10" src="/static/images/droite.gif"></option>
         </select>
         Date:
         <input type="text" class="span2" id="date" name="textdate" value="${date.strftime("%d-%m-%Y")}"/>

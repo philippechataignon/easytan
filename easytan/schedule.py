@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 from sqlalchemy import distinct, not_, or_
 from sqlalchemy.orm import joinedload
-
 from models import *
 
 class Schedule:
@@ -12,6 +11,10 @@ class Schedule:
     @property
     def routes(self):
         return self.session.query(Route)
+
+    @property
+    def agencies(self):
+        return self.session.query(Agency)
 
     @property
     def service_periods(self):
@@ -69,28 +72,20 @@ class Schedule:
         if l is not None :
             return l.stop
 
-    def stop_form(self, stop_id) :
-        """ Renvoit liste des stops :
-        * si stop_id station (ex:LMBR) :
-            renvoit [sLMBR, sLMBR1, sLMBR2]
-        * si stop_id normal (ex: LMBR1) :
-            renvoit [sLMBR, sLMBR1, sLMBR2]
-        """
+    def stop_form(self, stop_id, d=date.today()) :
         stop = self.getstop(stop_id)
         if stop is None :
             l_stops = []
         elif stop.is_station : # cas de la station
             l_stops = stop.child_stations
         else :
-            l_stops = stop.parent.child_stations
+            l_stops = [stop]
 
-        stops  = set()
-        routes = set()
-        for s in l_stops :
-            for sd in s.stopdir :
-                stops.add(sd.stop)
-                routes.add(sd.route)
-        return stop, sorted(list(stops), key=attrgetter('stop_id')), sorted(list(routes), key=attrgetter('route_short_name'))
+        h = self.horaire(l_stops, d)
+        dirs = set()
+        for st, t in h:
+            dirs.add((t.route, t.direction_id, t.trip_headsign))
+        return stop, l_stops, sorted(list(dirs), key=itemgetter(0,1))
 
     def liste_stations(self, term) :
         q = self.session.query(Stop). options(joinedload('commune')).filter(Stop.location_type==1)
@@ -124,3 +119,16 @@ class Schedule:
             trips = trips.filter_by(direction_id=direction_id)
         trips = trips.order_by(StopTime.arrival_time)
         return trips
+
+if __name__ == '__main__' :
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import scoped_session, sessionmaker
+
+    from connect import session
+    s = Schedule(session)
+    #station = s.getstop('MAI8')
+    #stops = station.child_stations
+    #print station, stops
+    #print s.horaire(stops, date(2014,7,16)).all()
+    print s.stop_form('MAI8')
+    print s.stop_form('COMM')

@@ -25,8 +25,8 @@ class ServicePeriod(Base):
     end_date = Column(Date, nullable=False)
 
     def __repr__(self):
-        return "<ServicePeriod %s %s%s%s%s%s%s%s>" % (self.service_id, 
-                self.monday, self.tuesday, self.wednesday, 
+        return "<ServicePeriod %s %s%s%s%s%s%s%s>" % (self.service_id,
+                self.monday, self.tuesday, self.wednesday,
                 self.thursday, self.friday, self.saturday, self.sunday)
 
     def active_on_dow(self, weekday):
@@ -155,19 +155,3 @@ class Commune(Base) :
     __tablename__ = "commune"
     code = Column(String, primary_key=True)
     nom  = Column(String, nullable=False)
-
-class StopDir(Base) :
-    __tablename__ = "stopdir"
-
-    stop_id = Column(String, ForeignKey("stops.stop_id"), primary_key=True)
-    route_id = Column(String, ForeignKey("routes.route_id"), primary_key=True)
-    direction_id = Column(Integer, primary_key=True)
-    terminus_id = Column(String, ForeignKey("stops.stop_id"), nullable=False)
-    nb = Column(Integer, nullable=False)
-
-    stop   = relationship("Stop", primaryjoin="StopDir.stop_id==Stop.stop_id", backref="stopdir", innerjoin=True)
-    route = relationship("Route", backref="stopdir", innerjoin=True)
-    terminus   = relationship("Stop", primaryjoin="StopDir.terminus_id==Stop.stop_id", innerjoin=True)
-
-    def __repr__(self) :
-        return "<StopDir %s %s %s %s>" % (self.stop, self.route, self.direction_id, self.terminus) 

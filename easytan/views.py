@@ -125,12 +125,13 @@ def json_hor(request):
         else :
             d = d.replace('-','')
             ddate = date(int(d[4:8]), int(d[2:4]), int(d[0:2]))
-        route_id = request.GET.get("route_id")
-        if route_id == 'ALL' :
+        routedir_id = request.GET.get("routedir_id")
+        print "route:", routedir_id
+        if routedir_id is None or routedir_id == 'ALL' :
             route_id = None
-        direction_id = request.GET.get("direction_id")
-        if direction_id == 'ALL' :
             direction_id = None
+        else:
+            route_id, direction_id = routedir_id.split('|')
         trips = sched.horaire(liste_stops, d=ddate, route_id=route_id, direction_id=direction_id)
         data = [{'heure': h.departure,
             'ligne': t.route.route_short_name,

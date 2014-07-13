@@ -44,14 +44,9 @@
                 window.location.href = "/map" ;
             }
         })
-        $('#sub_api').click(function() {
-            if ($('#nom_station').val().length >= 4) {
-                get_hor_api($('#nom_station').val().substr(0, 5));
-            }
-        })
         $('#sub_hor').click(function() {
             if ($('#nom_station').val().length >= 4) {
-                window.location.href = "/form/" + $('#nom_station').val().substr(0, 5);
+                window.location.href = "/form/" + $('#nom_station').val().substr(0, 4);
             }
         })
     });
@@ -69,7 +64,6 @@
         <input type="text" id="nom_station" name="stop_id" data-provide="typeahead" autocomplete="off" value="${stop_id}"/>
         <button id="sub_map" class="btn" ><i class="icon-eye-open"></i> Voir sur une carte</button>
         <button id="sub_hor" class="btn"><i class="icon-calendar"></i> Recherche horaires</button>
-        <button id="sub_api" class="btn"><i class="icon-time"></i> Horaires temps réel</button>
     </div>
     <div id="table_hor">
     </div>
