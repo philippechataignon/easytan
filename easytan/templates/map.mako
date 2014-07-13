@@ -51,11 +51,7 @@
                 }
                 markers.push(marker);
                 google.maps.event.addListener(marker, 'click', function() {
-                    if (map.getZoom() >= 16) {
-                        window.location.href = "/stop/" + this.id ;
-                    } else {
-                        window.location.href = "/map/" + this.id ;
-                    }
+                    window.location.href = "/form/" + this.id ;
                 });
             });
         });
