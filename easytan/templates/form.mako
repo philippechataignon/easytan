@@ -70,9 +70,9 @@ stop_id = "%s - %s (%s)" % (stop.stop_id, stop.stop_name, stop.commune.nom) if s
             <option value="ALL" selected="selected">Toutes les lignes</option>
             % for r in routedirs:
             <%
-            routedir_id = "%s#%s" % (r.route_id, r.direction_id)
+            routedir_id = "%s#%s" % (r[0], r[1])
             %>
-            <option value="${routedir_id}">Ligne ${r.route.route_short_name} - Direction ${r.trip_headsign}</option>
+            <option value="${routedir_id}">Ligne ${r[3]} - Direction ${r[2]}</option>
             % endfor
         </select>
         Date:

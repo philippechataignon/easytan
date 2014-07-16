@@ -40,7 +40,7 @@ def form(request) :
     stop = sched.getstop(stop_id)
     q = sched.stop_form(stop_id)
     ret = calc_form(q)
-    return {'stop': stop, 'date': date.today(), 'routedirs': q, 'stops': ret['ss']}
+    return {'stop': stop, 'date': date.today(), 'routedirs': ret['sd'], 'stops': ret['ss']}
 
 @view_config(route_name='trip', renderer='trip.mako')
 def trip(request) :
@@ -161,7 +161,7 @@ def json_map(request):
 
 def calc_form(q):
     qq = q.all()
-    ld = [(l.route_id, l.direction_id, l.trip_headsign) for l in qq]
+    ld = [(l.route_id, l.direction_id, l.trip_headsign, l.route.route_short_name) for l in qq]
     sd = sorted(set(ld), key=itemgetter(0,1))
     ss = sorted(set([l.stop_id for l in qq]))
     return {'sd': sd, 'ss': ss}
