@@ -73,21 +73,14 @@ class Schedule:
             return l.stop
 
     def stop_form(self, stop_id, d=date.today()) :
-        q = self.session.query(StopDir).filter(StopDir.parent_stop_id==stop_id)
-        #stop = self.getstop(stop_id)
-        #if stop is None :
-        #    l_stops = []
-        #elif stop.is_station : # cas de la station
-        #    l_stops = stop.child_stations
-        #else :
-        #    l_stops = [stop]
-
-        #h = self.horaire(l_stops, d)
-        #dirs = set()
-        #for st, t in h:
-        #    dirs.add((t.route, t.direction_id, t.trip_headsign))
-        #return stop, l_stops, sorted(list(dirs), key=itemgetter(0,1))
-        return q.all()
+        stop = self.getstop(stop_id)
+        if stop is None :
+            return []
+        elif stop.is_station : # cas de la station
+            q = self.session.query(StopDir).filter(StopDir.parent_stop_id==stop_id)
+        else :
+            q = self.session.query(StopDir).filter(StopDir.stop_id==stop_id)
+        return q
 
     def liste_stations(self, term) :
         q = self.session.query(Stop).options(joinedload('commune')).filter(Stop.location_type==1)

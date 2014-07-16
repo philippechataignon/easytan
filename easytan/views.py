@@ -3,6 +3,7 @@
 import re
 import urllib2
 import json
+from operator import attrgetter, itemgetter
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound
@@ -167,4 +168,6 @@ def json_form(request):
         d = d.replace('-','')
         ddate = date(int(d[4:8]), int(d[2:4]), int(d[0:2]))
     q = sched.stop_form(stop_id, ddate)
-    return [{'route_id':l.route_id, 'direction_id':l.direction_id, 'trip_headsign': l.trip_headsign} for l in q]
+    sd = set([(l.route_id, l.direction_id, l.trip_headsign) for l in q])
+    return [{'route_id':s[0], 'direction_id':s[1], 'trip_headsign': s[2]}
+            for s in sorted(sd, key=itemgetter(0,1))]
