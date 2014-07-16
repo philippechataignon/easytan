@@ -37,8 +37,10 @@ def accueil(request) :
 def form(request) :
     sched = Schedule(DBSession)
     stop_id = request.matchdict.get("stop_id", "").upper()
-    stop, stops, routes = sched.stop_form(stop_id)
-    return {'date': date.today(), 'stop': stop, 'stops':stops, 'routes': routes}
+    stop = sched.getstop(stop_id)
+    q = sched.stop_form(stop_id)
+    ret = calc_form(q)
+    return {'stop': stop, 'date': date.today(), 'routedirs': q, 'stops': ret['ss']}
 
 @view_config(route_name='trip', renderer='trip.mako')
 def trip(request) :
@@ -132,7 +134,7 @@ def json_hor(request):
             route_id = None
             direction_id = None
         else:
-            route_id, direction_id = routedir_id.split('|')
+            route_id, direction_id = routedir_id.split('#')
         trips = sched.horaire(liste_stops, d=ddate, route_id=route_id, direction_id=direction_id)
         data = [{'heure': h.departure,
             'ligne': t.route.route_short_name,
@@ -157,17 +159,19 @@ def json_map(request):
     l = [{'lat': s.stop_lat, 'lon': s.stop_lon, 'id': s.stop_id, 'nom': s.stop_name, 'loc_type':s.location_type} for s in stops]
     return l
 
+def calc_form(q):
+    qq = q.all()
+    ld = [(l.route_id, l.direction_id, l.trip_headsign) for l in qq]
+    sd = sorted(set(ld), key=itemgetter(0,1))
+    ss = sorted(set([l.stop_id for l in qq]))
+    return {'sd': sd, 'ss': ss}
+
 @view_config(route_name='json_form', renderer='json')
 def json_form(request):
     sched = Schedule(DBSession)
     stop_id = request.GET.get("stop_id")
-    d = request.GET.get("date")
-    if d is None :
-        ddate = date.today()
-    else :
-        d = d.replace('-','')
-        ddate = date(int(d[4:8]), int(d[2:4]), int(d[0:2]))
-    q = sched.stop_form(stop_id, ddate)
-    sd = set([(l.route_id, l.direction_id, l.trip_headsign) for l in q])
+    q = sched.stop_form(stop_id)
+    ret = calc_form(q)
+    sd = ret['sd']
     return [{'route_id':s[0], 'direction_id':s[1], 'trip_headsign': s[2]}
             for s in sorted(sd, key=itemgetter(0,1))]

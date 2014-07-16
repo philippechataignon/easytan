@@ -72,7 +72,7 @@ class Schedule:
         if l is not None :
             return l.stop
 
-    def stop_form(self, stop_id, d=date.today()) :
+    def stop_form(self, stop_id) :
         stop = self.getstop(stop_id)
         if stop is None :
             return []

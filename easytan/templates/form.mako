@@ -55,24 +55,25 @@ stop_id = "%s - %s (%s)" % (stop.stop_id, stop.stop_name, stop.commune.nom) if s
     <div class="well form-inline">
         Arrêt:
         <select class="span2" name="stop_id" id="stop_id">
-            <option value=${stop.stop_id} selected="selected">Tous</option>
-        % for s in stops:
-            <option value="${s.stop_id}"
-            %if s.stop_id == stop.stop_id :
+            <option value="${stop.stop_id}" selected="selected">Tous</option>
+            % for s in stops:
+            <option value="${s}"
+            %if s == stop.stop_id :
                 selected="selected"
             %endif
-            >${s.stop_id}</option>
+            >${s}</option>
         % endfor
         </select>
+
         Ligne:
         <select class="span4" name="routedir_id" id="routedir_id">
             <option value="ALL" selected="selected">Toutes les lignes</option>
-        % for r, d, n in routes:
-        <%
-        routedir_id = "%s|%s" % (r.route_id, d)
-        %>
-        <option value="${routedir_id}">Ligne ${r.route_short_name} - Direction ${n}</option>
-        % endfor
+            % for r in routedirs:
+            <%
+            routedir_id = "%s#%s" % (r.route_id, r.direction_id)
+            %>
+            <option value="${routedir_id}">Ligne ${r.route.route_short_name} - Direction ${r.trip_headsign}</option>
+            % endfor
         </select>
         Date:
         <input type="text" class="span2" id="date" name="textdate" value="${date.strftime("%d-%m-%Y")}"/>
@@ -85,4 +86,3 @@ stop_id = "%s - %s (%s)" % (stop.stop_id, stop.stop_name, stop.commune.nom) if s
     Station inconnue
 </div>
 %endif
-
