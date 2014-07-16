@@ -155,3 +155,20 @@ class Commune(Base) :
     __tablename__ = "commune"
     code = Column(String, primary_key=True)
     nom  = Column(String, nullable=False)
+
+class StopDir(Base) :
+    __tablename__ = "stopdir"
+    parent_stop_id = Column(String, ForeignKey("stops.stop_id"))
+    stop_id = Column(String, ForeignKey("stops.stop_id"), primary_key=True)
+    route_id = Column(String, ForeignKey("routes.route_id"), primary_key=True)
+    direction_id = Column(Integer, primary_key=True)
+    routedir_id = Column(String)
+    trip_headsign = Column(String, nullable=False)
+    nb = Column(Integer, nullable=False)
+
+    station = relationship("Stop", primaryjoin="StopDir.parent_stop_id==Stop.stop_id", innerjoin=True)
+    stop   = relationship("Stop", primaryjoin="StopDir.stop_id==Stop.stop_id", innerjoin=True)
+    route = relationship("Route", backref="stopdir", innerjoin=True)
+
+    def __repr__(self) :
+        return "<StopDir %s %s %s %s %s>" % (self.station, self.stop, self.route, self.routedir_id, self.trip_headsign)

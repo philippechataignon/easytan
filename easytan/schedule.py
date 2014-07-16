@@ -73,22 +73,24 @@ class Schedule:
             return l.stop
 
     def stop_form(self, stop_id, d=date.today()) :
-        stop = self.getstop(stop_id)
-        if stop is None :
-            l_stops = []
-        elif stop.is_station : # cas de la station
-            l_stops = stop.child_stations
-        else :
-            l_stops = [stop]
+        q = self.session.query(StopDir).filter(StopDir.parent_stop_id==stop_id)
+        #stop = self.getstop(stop_id)
+        #if stop is None :
+        #    l_stops = []
+        #elif stop.is_station : # cas de la station
+        #    l_stops = stop.child_stations
+        #else :
+        #    l_stops = [stop]
 
-        h = self.horaire(l_stops, d)
-        dirs = set()
-        for st, t in h:
-            dirs.add((t.route, t.direction_id, t.trip_headsign))
-        return stop, l_stops, sorted(list(dirs), key=itemgetter(0,1))
+        #h = self.horaire(l_stops, d)
+        #dirs = set()
+        #for st, t in h:
+        #    dirs.add((t.route, t.direction_id, t.trip_headsign))
+        #return stop, l_stops, sorted(list(dirs), key=itemgetter(0,1))
+        return q.all()
 
     def liste_stations(self, term) :
-        q = self.session.query(Stop). options(joinedload('commune')).filter(Stop.location_type==1)
+        q = self.session.query(Stop).options(joinedload('commune')).filter(Stop.location_type==1)
         q = q.filter(or_(Stop.stop_name.ilike('%%%s%%' % term), Stop.stop_id.ilike('%%%s%%' % term)))
         return q
 
@@ -131,4 +133,4 @@ if __name__ == '__main__' :
     #print station, stops
     #print s.horaire(stops, date(2014,7,16)).all()
     print s.stop_form('MAI8')
-    print s.stop_form('COMM')
+    #print s.stop_form('COMM')

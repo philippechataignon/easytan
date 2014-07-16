@@ -155,3 +155,16 @@ def json_map(request):
     stops = sched.stops_latlon(latl=latl, lath=lath, lonl=lonl, lonh=lonh, loc_type=loc_type)
     l = [{'lat': s.stop_lat, 'lon': s.stop_lon, 'id': s.stop_id, 'nom': s.stop_name, 'loc_type':s.location_type} for s in stops]
     return l
+
+@view_config(route_name='json_form', renderer='json')
+def json_form(request):
+    sched = Schedule(DBSession)
+    stop_id = request.GET.get("stop_id")
+    d = request.GET.get("date")
+    if d is None :
+        ddate = date.today()
+    else :
+        d = d.replace('-','')
+        ddate = date(int(d[4:8]), int(d[2:4]), int(d[0:2]))
+    q = sched.stop_form(stop_id, ddate)
+    return [{'route_id':l.route_id, 'direction_id':l.direction_id, 'trip_headsign': l.trip_headsign} for l in q]

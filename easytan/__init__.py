@@ -25,6 +25,7 @@ def main(global_config, **settings):
     config.add_route('json_hor', '/json_hor')
     config.add_route('json_api', '/json_api')
     config.add_route('json_map', '/json_map')
+    config.add_route('json_form', '/json_form')
     config.scan()
     return config.make_wsgi_app()
 
