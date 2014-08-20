@@ -83,7 +83,7 @@ class Schedule:
         return q
 
     def liste_stations(self, term) :
-        q = self.session.query(Stop).options(joinedload('commune')).filter(Stop.location_type==1)
+        q = self.session.query(Stop).filter(Stop.location_type==1)
         q = q.filter(or_(Stop.stop_name.ilike('%%%s%%' % term), Stop.stop_id.ilike('%%%s%%' % term)))
         return q
 

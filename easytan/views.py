@@ -80,8 +80,7 @@ def json_stops(request):
     if len(term) < 2 :
         return []
     else :
-        l = sched.liste_stations(term)
-        return ["%s - %s (%s)" % (s.stop_id, s.stop_name, s.commune.nom) for s in l]
+        return ["%s - %s" % (s.stop_id, s.stop_desc) for s in sched.liste_stations(term)]
 
 @view_config(route_name='json_api', renderer='json')
 def json_api(request) :

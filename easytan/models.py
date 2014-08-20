@@ -73,7 +73,7 @@ class Stop(Base):
     stop_id = Column(String, primary_key=True)
     stop_code = Column(String)
     stop_name = Column(String, nullable=False, index=True)
-    stop_desc = Column(String, ForeignKey("commune.code"), index=True)
+    stop_desc = Column(String)
     stop_lat = Column(Float, nullable=False)
     stop_lon = Column(Float, nullable=False)
     zone_id = Column(String)
@@ -81,7 +81,6 @@ class Stop(Base):
     location_type = Column(Integer)
     parent_station = Column(String, ForeignKey("stops.stop_id"), index=True)
     parent  = relationship("Stop", backref="child_stations", remote_side=[stop_id])
-    commune = relationship("Commune", innerjoin=True, backref="stations")
 
     def __repr__(self):
         return "<Stop %s>" % self.stop_id
@@ -149,12 +148,6 @@ class StopTime(Base):
 
     def __repr__(self):
         return "<StopTime %s %s>" % (self.trip_id, self.departure_time)
-
-
-class Commune(Base) :
-    __tablename__ = "commune"
-    code = Column(String, primary_key=True)
-    nom  = Column(String, nullable=False)
 
 class StopDir(Base) :
     __tablename__ = "stopdir"
