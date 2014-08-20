@@ -135,12 +135,14 @@ def json_hor(request):
         else:
             route_id, direction_id = routedir_id.split('#')
         trips = sched.horaire(liste_stops, d=ddate, route_id=route_id, direction_id=direction_id)
-        data = [{'heure': h.departure,
-            'ligne': t.route.route_short_name,
-            'sens': 'gauche' if t.direction_id == 1 else 'droite',
-            'terminus': t.terminus.stop_name,
-            'stop': h.stop_id,
-            'trip_id': t.trip_id
+        data = [
+            {
+                'heure': h.departure,
+                'ligne': t.route.route_short_name,
+                'sens': 'gauche' if t.direction_id == 1 else 'droite',
+                'terminus': t.terminus.stop_name,
+                'stop': h.stop_id,
+                'trip_id': t.trip_id
             } for (h, t) in trips]
     head =['Heure', 'Ligne', 'Sens', 'Terminus', 'Arrêt']
     return {'head':head, 'data':data}
