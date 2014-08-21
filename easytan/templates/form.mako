@@ -48,7 +48,7 @@
 </%block>
 % if stop is not None :
 <%
-stop_id = "%s - %s" % (stop.stop_id, stop.stop_desc) if stop else ""
+stop_id = "arrêt %s (%s)" % (stop.stop_name, stop.stop_desc) if stop else ""
 %>
 <div class="container">
     <h2>Horaires ${stop_id}</h2>
