@@ -4,36 +4,17 @@
     <script src="/static/bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript">
     $(function() {
-        function get_hor_api(stop_id) {
-            $.getJSON(
-                '/json_api', 
-                {'stop_id': stop_id}, 
-                function(data) {
-                    var table=['<table class="table table-striped"><tr>'];
-                    $.each(data.head, function(key, item){
-                        table.push('<th>'+item+'</th>');
-                    });
-                    table.push('</tr>');
-                    $.each(data.data, function(key, item){
-                        table.push('<tr>');
-                        table.push('<td>'+item.attente+'</td>');
-                        table.push('<td><img width="25" height="25" src="/static/images/lignes/'+item.ligne+'.gif"></td>');
-                        table.push('<td><img width="10" height="10" src="/static/images/'+item.sens+'.gif"></td>');
-                        table.push('<td>'+item.terminus+'</td>');
-                        table.push('<td>'+item.stop+'</td>');
-                        table.push('</tr>');
-                    });
-                    table.push('</table>');
-                $('#table_hor').html(table.join(''));  
-                }
-            );
-        }
         $('#nom_station').typeahead({
             minLength: 2,
             source: function (query, process) {
                 $.getJSON('/json_stops', 
                     {query: query}, 
-                    function (data) {return process(data);}
+                    function (data) {
+                        var resultList = data.map(function (item) {
+                            return item.id + ' - ' + item.name + ' (' + item.commune + ')';
+                        });
+                        return process(resultList);
+                    }
                 );
             }
         });

@@ -21,11 +21,12 @@ def main(global_config, **settings):
     config.add_route('test_map', '/test_map')
     config.add_route('stop_stop', '/stop/{stop_id}')
     config.add_route('savoir', '/savoir')
+    config.add_route('json_stop', '/json_stop')
     config.add_route('json_stops', '/json_stops')
     config.add_route('json_hor', '/json_hor')
-    config.add_route('json_api', '/json_api')
     config.add_route('json_map', '/json_map')
     config.add_route('json_form', '/json_form')
+    config.add_route('json_trip', '/json_trip')
     config.scan()
     return config.make_wsgi_app()
 

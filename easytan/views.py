@@ -72,6 +72,22 @@ def map(request):
     }
 
 ### JSON
+@view_config(route_name='json_stop', renderer='json')
+def json_stop(request):
+    sched = Schedule(DBSession)
+    stop_id = request.GET.get("stop_id")
+    stop = sched.getstop(stop_id)
+    if stop :
+        return {'id':stop.stop_id, 'name':stop.stop_name, 'commune':stop.stop_desc,
+                'location_type':stop.location_type, 'parent_station': stop.parent_station,
+                'lat': stop.stop_lat, 'long': stop.stop_lon,
+            }
+    else :
+        return {'id':None, 'name':None, 'commune':None,
+                'location_type':None, 'parent_station': None,
+                'lat': None, 'long': None,
+            }
+
 @view_config(route_name='json_stops', renderer='json')
 def json_stops(request):
     sched = Schedule(DBSession)
@@ -80,34 +96,7 @@ def json_stops(request):
     if len(term) < 2 :
         return []
     else :
-        return ["%s - %s (%s)" % (s.stop_id, s.stop_name, s.stop_desc) for s in sched.liste_stations(term)]
-
-@view_config(route_name='json_api', renderer='json')
-def json_api(request) :
-    stop_id = request.GET.get("stop_id")
-    if stop_id is None :
-        return {'head':'No stop_id', 'data':[]}
-    headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept-language': 'fr_FR',
-    }
-
-    url = "https://open.tan.fr/ewp/tempsattente.json/%s" % stop_id
-    r = urllib2.Request(url, headers=headers)
-    try :
-        f = urllib2.urlopen(r)
-    except (urllib2.HTTPError, urllib2.URLError) :
-        return {'head':'Erreur HTML', 'data':[]}
-    liste = json.load(f)
-    data = [{'attente':l['temps'],
-        'ligne':l['ligne']['numLigne'],
-        'sens': 'gauche' if l['sens']== 1 else 'droite' ,
-        'terminus':l['terminus'],
-        'stop': l['arret']['codeArret']
-        } for l in liste if l['temps'] != '>1h']
-    head =['Attente', 'Ligne', 'Sens', 'Terminus', 'Arrêt']
-    return {'head':head, 'data':data}
+        return [{'id':s.stop_id, 'name':s.stop_name, 'commune':s.stop_desc} for s in sched.liste_stations(term)]
 
 @view_config(route_name='json_hor', renderer='json')
 def json_hor(request):
@@ -135,14 +124,12 @@ def json_hor(request):
         else:
             route_id, direction_id = routedir_id.split('#')
         trips = sched.horaire(liste_stops, d=ddate, route_id=route_id, direction_id=direction_id)
-        data = [
-            {
-                'heure': h.departure,
-                'ligne': t.route.route_short_name,
-                'sens': 'gauche' if t.direction_id == 1 else 'droite',
-                'terminus': t.terminus.stop_name,
-                'stop': h.stop_id,
-                'trip_id': t.trip_id
+        data = [{'heure': h.departure,
+            'ligne': t.route.route_short_name,
+            'sens': 'gauche' if t.direction_id == 1 else 'droite',
+            'terminus': t.terminus.stop_name,
+            'stop': h.stop_id,
+            'trip_id': t.trip_id
             } for (h, t) in trips]
     head =['Heure', 'Ligne', 'Sens', 'Terminus', 'Arrêt']
     return {'head':head, 'data':data}
@@ -174,5 +161,13 @@ def json_form(request):
     q = sched.stop_form(stop_id)
     ret = calc_form(q)
     sd = ret['sd']
-    return [{'route_id':s[0], 'direction_id':s[1], 'trip_headsign': s[2]}
+    return [{'route_id':s[0], 'direction_id':s[1], 'trip_headsign': s[2], 'route_short_name': s[3]}
             for s in sorted(sd, key=itemgetter(0,1))]
+
+@view_config(route_name='json_trip', renderer='json')
+def json_trip(request):
+    sched = Schedule(DBSession)
+    trip_id = request.GET.get("trip_id")
+    trip = sched.trips.get(trip_id)
+    l = [{"arrival": st.arrival, "stop_name": st.stop.stop_name, "stop_id": st.stop.stop_id} for st in trip.stop_times]
+    return l
