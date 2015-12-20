@@ -5,13 +5,14 @@ from setuptools import setup, find_packages
 here = os.path.abspath(os.path.dirname(__file__))
 
 requires = [
+    'pyramid_mako',
     'pyramid',
     'SQLAlchemy',
     'transaction',
     'pyramid_tm',
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
-    'waitress',
+    'gunicorn',
     ]
 
 setup(name='easytan',
