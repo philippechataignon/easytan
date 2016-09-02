@@ -36,9 +36,7 @@
 
 <div class="container">
     <h1>Bienvenue sur EasyTan</h1>
-    <p>Cette version du site utilise la base des horaires valable à partir du 25 août 2014.
-    Découvrez la <a href="http://dev.easytan.fr">future version</a> d'easytan, actuellement 
-    en préparation.
+    <p>Cette version du site utilise la base des horaires valable à partir du 1er septembre 2016.
     </p>
     <p>Entrer le <b>nom de votre station</b>.</p>
     <%
