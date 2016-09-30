@@ -171,3 +171,25 @@ def json_trip(request):
     trip = sched.trips.get(trip_id)
     l = [{"arrival": st.arrival, "stop_name": st.stop.stop_name, "stop_id": st.stop.stop_id} for st in trip.stop_times]
     return l
+
+@view_config(route_name='json_api', renderer='json')
+def json_api(request) :
+    stop_id = request.GET.get("stop_id")
+    if stop_id is None :
+        return {'head':'No stop_id', 'data':[]}
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept-language': 'fr_FR',
+    }
+
+    url = "https://open.tan.fr/ewp/tempsattente.json/%s" % stop_id
+    r = urllib2.Request(url, headers=headers)
+    try :
+        f = urllib2.urlopen(r)
+    except urllib2.HTTPError :
+        return {'head':'Erreur HTML', 'data':[]}
+    liste = json.load(f)
+    data = [[l['temps'], l['ligne']['numLigne'], l['terminus'], l['arret']['codeArret']] for l in liste]
+    head =['Heure', 'Ligne', 'Direction', 'Arrêt']
+    return {'head':head, 'data':data}
