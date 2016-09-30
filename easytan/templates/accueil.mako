@@ -4,6 +4,31 @@
     <script src="/static/bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript">
     $(function() {
+        function get_hor_api(stop_id) {
+            $.getJSON(
+                '/json_api', 
+                {'stop_id': stop_id}, 
+                function(data) {
+                    var table=['<table class="table table-striped"><tr>'];
+                    $.each(data.head, function(key, item){
+                        table.push('<th>'+item+'</th>');
+                    });
+                    table.push('</tr>');
+                    $.each(data.data, function(key, item){
+                        table.push('<tr>');
+                        table.push('<td>'+item.temps+'</td>');
+                        table.push('<td><img width="25" height="25" alt="'+item.ligne.numLigne+'" src="/static/images/lignes/'+item.ligne.numLigne+'.gif"></td>');
+                        table.push('<td><img width="10" height="10" src="/static/images/'+item.sens+'.gif"></td>');
+                        table.push('<td>'+item.terminus+'</td>');
+                        table.push('<td><a href="/map/'+item.arret.codeArret+'">'+item.arret.codeArret+'</a></td>');
+                        table.push('</tr>');
+                    });
+                    table.push('</table>');
+                $('#table_hor').html(table.join(''));  
+                }
+            );
+        }
+
         $('#nom_station').typeahead({
             minLength: 2,
             source: function (query, process) {
@@ -30,6 +55,11 @@
                 window.location.href = "/form/" + $('#nom_station').val().substr(0, 4);
             }
         })
+        $('#sub_api').click(function() {
+            if ($('#nom_station').val().length >= 4) {
+                get_hor_api($('#nom_station').val().substr(0, 5));
+            }
+        })		
     });
     </script>
 </%block>
@@ -46,6 +76,7 @@
         <input type="text" id="nom_station" name="stop_id" data-provide="typeahead" autocomplete="off" value="${stop_id}"/>
         <button id="sub_map" class="btn" ><i class="icon-eye-open"></i> Voir sur une carte</button>
         <button id="sub_hor" class="btn"><i class="icon-calendar"></i> Recherche horaires</button>
+		<button id="sub_api" class="btn"><i class="icon-time"></i> Horaires temps réel</button>
     </div>
     <div id="table_hor">
     </div>

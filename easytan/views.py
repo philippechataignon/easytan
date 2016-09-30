@@ -1,7 +1,8 @@
 # -*- coding: utf8 -*-
 
 import re
-import urllib2
+# import urllib2
+import requests
 import json
 from operator import attrgetter, itemgetter
 from pyramid.response import Response
@@ -174,6 +175,10 @@ def json_trip(request):
 
 @view_config(route_name='json_api', renderer='json')
 def json_api(request) :
+    proxies = {
+	    'http': 'http://proxy2.justice.gouv.fr:8080',
+	    'https': 'http://proxy2.justice.gouv.fr:8080'
+    }
     stop_id = request.GET.get("stop_id")
     if stop_id is None :
         return {'head':'No stop_id', 'data':[]}
@@ -183,13 +188,10 @@ def json_api(request) :
         'Accept-language': 'fr_FR',
     }
 
-    url = "https://open.tan.fr/ewp/tempsattente.json/%s" % stop_id
-    r = urllib2.Request(url, headers=headers)
-    try :
-        f = urllib2.urlopen(r)
-    except urllib2.HTTPError :
-        return {'head':'Erreur HTML', 'data':[]}
-    liste = json.load(f)
-    data = [[l['temps'], l['ligne']['numLigne'], l['terminus'], l['arret']['codeArret']] for l in liste]
-    head =['Heure', 'Ligne', 'Direction', 'Arrêt']
-    return {'head':head, 'data':data}
+    url = "http://open.tan.fr/ewp/tempsattente.json/%s" % stop_id.upper()
+    r = requests.get(url, proxies=proxies)
+    j = r.json()
+    #data = [[l['temps'], l['ligne']['numLigne'], l['terminus'], l['arret']['codeArret']] for l in j]
+    head =['Temps', 'Ligne', 'Sens', 'Direction', 'Arrêt']
+    print({'head':head, 'data':j})
+    return {'head':head, 'data':j}
