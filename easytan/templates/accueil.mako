@@ -42,7 +42,7 @@
                     }
                 );
             }
-        });
+        	});
         $('#sub_map').click(function() {
             if ($('#nom_station').val().length > 0) {
                 window.location.href = "/map/" + $('#nom_station').val().substr(0, 4);

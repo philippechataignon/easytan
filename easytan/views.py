@@ -175,23 +175,10 @@ def json_trip(request):
 
 @view_config(route_name='json_api', renderer='json')
 def json_api(request) :
-    proxies = {
-	    'http': 'http://proxy2.justice.gouv.fr:8080',
-	    'https': 'http://proxy2.justice.gouv.fr:8080'
-    }
     stop_id = request.GET.get("stop_id")
     if stop_id is None :
         return {'head':'No stop_id', 'data':[]}
-    headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept-language': 'fr_FR',
-    }
-
     url = "http://open.tan.fr/ewp/tempsattente.json/%s" % stop_id.upper()
-    r = requests.get(url, proxies=proxies)
-    j = r.json()
-    #data = [[l['temps'], l['ligne']['numLigne'], l['terminus'], l['arret']['codeArret']] for l in j]
+    r = requests.get(url)
     head =['Temps', 'Ligne', 'Sens', 'Direction', 'Arrêt']
-    print({'head':head, 'data':j})
-    return {'head':head, 'data':j}
+    return {'head':head, 'data':r.json()}
