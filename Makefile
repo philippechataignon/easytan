@@ -6,3 +6,5 @@ build:
 	docker build -t easytan:build .
 dev:
 	docker run --rm --entrypoint sh -it -p 9876:9876 -v `pwd`/db:/db easytan:build
+tag:
+	docker tag -f easytan:build easytan
