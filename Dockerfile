@@ -1,7 +1,6 @@
 FROM pyramid
 
-COPY dist/easytan-1.0.tar.gz .
-COPY production.ini .
+COPY production.ini dist/easytan-1.0.tar.gz ./
 RUN pip install easytan-1.0.tar.gz
 VOLUME /db
 USER pyramid
