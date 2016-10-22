@@ -118,7 +118,6 @@ def json_hor(request):
             d = d.replace('-','')
             ddate = date(int(d[4:8]), int(d[2:4]), int(d[0:2]))
         routedir_id = request.GET.get("routedir_id")
-        print "route:", routedir_id
         if routedir_id is None or routedir_id == 'ALL' :
             route_id = None
             direction_id = None

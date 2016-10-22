@@ -16,7 +16,7 @@ requires = [
     ]
 
 setup(name='easytan',
-      version='0.0',
+      version='1.0',
       description='easytan',
       classifiers=[
         "Programming Language :: Python",
