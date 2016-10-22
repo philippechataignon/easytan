@@ -1,4 +1,5 @@
 build:
+	python setup.py sdist
 	docker build -t easytan:build .
 run:
 	docker run --name easytan_prod --restart=always -d -p 10001:9876 -v `pwd`/db:/db easytan
